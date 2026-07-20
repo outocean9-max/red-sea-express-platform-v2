@@ -1,2 +1,16 @@
 # red-sea-express-platform-v2
- Red Sea Express AI Logistics Platform is a next-generation global trade and logistics ecosystem connecting importers, exporters, manufacturers, freight forwarders, shipping lines, customs brokers, transport companies, warehouses, and logistics project partners. Powered by Ali AI, the platform provides intelligent business assistance, 
+ red-sea-express-platform-v2/
+├── README.md  ✅
+├── backend/
+├── frontend/
+├── ai/
+├── api/
+├── database/
+├── mobile/
+├── design/
+└── docs/
+    ├── ARCHITECTURE.md ✅
+    ├── ADMIN_GUIDE.md
+    ├── AI_ASSISTANT.md
+    ├── ANALYTICS_REPORTING.md
+    └── AUDIT_LOG_SYSTEM.md

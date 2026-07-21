@@ -1,48 +1,56 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  postgres:
-    image: postgres:16
-    container_name: rse_postgres
-    restart: always
+  db:
+    image: postgres:15
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: rse_user
-      POSTGRES_PASSWORD: rse_password
-      POSTGRES_DB: redseaexpress
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: redsea
+    volumes:
+      - db-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
-  backend:
-    image: python:3.12
-    container_name: rse_backend
-    restart: always
-    working_dir: /app
-    volumes:
-      - ./backend:/app
-    command: >
-      sh -c "pip install -r requirements.txt && python main.py"
+  redis:
+    image: redis:7
+    restart: unless-stopped
     ports:
-      - "8000:8000"
-    environment:
-      DATABASE_URL: postgresql://rse_user:rse_password@postgres:5432/redseaexpress
-    depends_on:
-      - postgres
+      - "6379:6379"
 
-  frontend:
-    image: node:22
-    container_name: rse_frontend
-    restart: always
-    working_dir: /app
+  backend_service:
+    build:
+      context: ./backend_service
+    working_dir: /usr/src/app
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
-      - ./frontend:/app
-    command: >
-      sh -c "npm install && npm run dev"
+      - ./backend_service:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - db
+      - redis
+
+  frontend:
+    build:
+      context: ./frontend
+    working_dir: /usr/src/app
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend_service
 
 volumes:
-  postgres_data:
+  db-data:

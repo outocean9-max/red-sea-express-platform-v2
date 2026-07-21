@@ -4,7 +4,8 @@ WORKDIR /usr/src/app
 
 # Install deps based on package.json
 COPY frontend/package.json frontend/package-lock.json* ./
-RUN npm ci
+# Allow fallback to npm install when package-lock.json is not present
+RUN npm ci || npm install
 
 # Copy source and build
 COPY frontend/ ./

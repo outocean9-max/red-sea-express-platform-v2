@@ -1,0 +1,13 @@
+{
+  "name": "red-sea-express-backend-service",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
+  }
+}

@@ -16,6 +16,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Debug frontend layout
+        run: |
+          echo "Listing frontend:"
+          ls -la frontend || true
+          echo "Type of frontend/app:"
+          file frontend/app || true
+          echo "Node and npm versions:"
+          node -v || true
+          npm -v || true
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -23,7 +33,15 @@ jobs:
 
       - name: Install frontend deps
         working-directory: frontend
-        run: npm ci || npm install
+        run: |
+          echo "Node $(node -v), npm $(npm -v)"
+          if [ -f package-lock.json ]; then
+            echo "Using npm ci (package-lock.json found)"
+            npm ci
+          else
+            echo "package-lock.json not found — falling back to npm install"
+            npm install
+          fi
 
       - name: Build frontend
         working-directory: frontend

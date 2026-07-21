@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: rse_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: rse_user
+      POSTGRES_PASSWORD: rse_password
+      POSTGRES_DB: redseaexpress
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    image: python:3.12
+    container_name: rse_backend
+    restart: always
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: >
+      sh -c "pip install -r requirements.txt && python main.py"
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://rse_user:rse_password@postgres:5432/redseaexpress
+    depends_on:
+      - postgres
+
+  frontend:
+    image: node:22
+    container_name: rse_frontend
+    restart: always
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: >
+      sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

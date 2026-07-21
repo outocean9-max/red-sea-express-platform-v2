@@ -1,0 +1,4 @@
+# Duplicate workflow removed.
+# This file was a mistaken duplicate of .github/workflows/render-deploy.yml
+# Keeping an explicit placeholder to avoid accidental duplicate workflow executions.
+# If you prefer full deletion, remove this file in a follow-up commit via the GitHub UI or git.
